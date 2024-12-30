@@ -1,28 +1,31 @@
 package com.group.libraryapp.domain.user;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import com.group.libraryapp.domain.book.Book;
 import com.group.libraryapp.domain.user.loanhistory.UserLoanHistory;
-
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import static javax.persistence.GenerationType.IDENTITY;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Entity
 public class User {
 
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  private final List<UserLoanHistory> userLoanHistories = new ArrayList<>();
   @Id
   @GeneratedValue(strategy = IDENTITY)
   private Long id;
-
   @Column(nullable = false)
   private String name;
-
   private Integer age;
-
-  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-  private final List<UserLoanHistory> userLoanHistories = new ArrayList<>();
 
   public User() {
 
@@ -52,10 +55,12 @@ public class User {
     targetHistory.doReturn();
   }
 
+  @NotNull
   public String getName() {
     return name;
   }
 
+  @Nullable
   public Integer getAge() {
     return age;
   }
